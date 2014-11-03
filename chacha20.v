@@ -15,15 +15,15 @@ endmodule
 module chacha20(input wire clock,
                 input wire start,
                 input  wire [255:0] key,
-                input  wire [63:0] index, // little-endian!
+                input  wire [63:0] index, // integer, not little-endian bytes
                 input  wire [63:0] nonce,
                 output reg done = 0,
                 output wire [511:0] out);
-    //  python2: "expand 32-byte k".encode('hex')
-    wire [511:0] init = {128'h657870616e642033322d62797465206b, key, index, nonce};
     function [31:0] LE32(input [31:0] a);
         LE32 = {a[7:0], a[15:8], a[23:16], a[31:24]};
     endfunction
+    localparam CONST = 128'h657870616e642033322d62797465206b; // "expand 32-byte k".encode('hex')
+    wire [511:0] init ={CONST, key, LE32(index[31:0]), LE32(index[63:32]), nonce};
 
     reg [31:0] x [0:15];
     genvar j; generate for (j = 0; j < 16; j = j + 1) begin: gen
