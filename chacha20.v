@@ -1,6 +1,6 @@
 `default_nettype none
 
-module chacha20_quarter(input  wire [31:0] ai, bi, ci, di,
+module chacha20_quarter(input wire [31:0] ai, bi, ci, di,
                         output reg [31:0] a, b, c, d);
     always @(*) begin a=ai; b=bi; c=ci; d=di;
         `define ROTL32(w,n) {w[31-n:0], w[31:32-n]}
